@@ -1,0 +1,59 @@
+1
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class ImageForm(forms.ModelForm):
+    photo = MultipleFileField(label='Select files', required=False)
+
+    class Meta:
+        model = Image
+        fields = ['photo', ]
+Remember that you'll have to update your function accepting the request/files in the views.py accordingly. For example -
+
+def function(request):
+    if request.method == 'POST' :
+        uploaded_images = request.FILES.getlist('photo')
+        for image in uploaded_images:
+            #your task here (What you want to do with the image)
+
+
+
+2 падает
+
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['photo', ]
+        widgets = {
+            'photo': forms.ClearableFileInput(attrs={'multiple': True})
+        }
+
+
+
+3 не выбирает
+
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = ['photo', ]
+        widgets = {
+
+            'photo': forms.ClearableFileInput(attrs={'allow_multiple_selected': True})
+
+        }

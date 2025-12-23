@@ -1,0 +1,6 @@
+.idea/
+env/
+godwish/lib/key
+__pycache__/
+media
+/materials_sources
