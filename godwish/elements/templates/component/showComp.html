@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Показ элементов</title>
 </head>
 <body>
+<h1>Список Комплектов</h1>
+<ul>
+        {% for comp in components %}
+            <li>
+                {{ comp.name }} {{ comp.comment }} {{ comp.update }} {{ comp.contract }}
+            </li>
+        {% endfor %}
+    </ul>
 
 </body>
 </html>

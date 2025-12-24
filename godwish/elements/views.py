@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 
 from .forms import UpPicture, UpDocument, UpComponent
-from .models import Picture, Document
+from .models import Picture, Document, Component
 
 
 # Create your views here.
@@ -91,30 +91,47 @@ class GaleryView(View):
 
 class CompCreate(View):
     form = UpComponent
+
     def get(self, request):
         content = {"form": self.form}
         return render(request, template_name='component/createComp.html', context=content)
 
     def post(self, request):
         # Забираем свои аргументы
-        name=request.POST.get('name')
-        comment=request.POST.get('comment')
+        name = request.POST.get('name')
+        comment = request.POST.get('comment')
         contract = request.POST.get('contract')
         print(name)
         print(comment)
         if contract == 'on':
-            contract=True
+            contract = True
         else:
-            contract=False
+            contract = False
         print(contract)
+        Component.objects.create(name=name, comment=comment, contract=contract)
+
         # Забираем картинки
         uploaded_images = request.FILES.getlist('images')
+        if len(uploaded_images):
+            for image in uploaded_images:
+                print(image._name)
+                # Сохраним картинку
+                # Если картинка одна и есть name из формы:
+                Picture.objects.create(name=image._name, comment=comment, picture=image)
+
         # Забираем документы
         uploaded_docs = request.FILES.getlist('docs')
+        if len(uploaded_docs):
+            for doc in uploaded_docs:
+                print(doc._name)
+                Document.objects.create(name=doc._name, comment=comment, document=doc)
+
         return render(request, template_name='loaded.html')
 
 
 class CompShow(View):
-    def get(self):
+    def get(self,request):
         # Чтобы показать элемент, необходимо поднять несколько таблиц
-        return render(request, template_name='showComp.html')
+        components=Component.objects.all()
+        content={'components':components}
+        return render(request,context=content, template_name='component/showComp.html')

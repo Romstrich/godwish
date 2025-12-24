@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import ManyToManyField
 
 # Create your models here.
 '''
@@ -40,9 +41,11 @@ class Component(models.Model):
     name = models.CharField(verbose_name="Название", max_length=128, blank=True)
     comment = models.CharField(verbose_name="Комментарий", max_length=256, blank=True)
     # ссылка на изображения
-    images = models.ImageField(verbose_name="Изображение", upload_to='galery/', blank=True, null=True)
+    images = ManyToManyField(Picture,through='CompPic')
+        #models.ImageField(verbose_name="Изображение", upload_to='galery/', blank=True, null=True)
     # ссылка на документы
-    docs = models.FileField(verbose_name="Документ", upload_to='documents/', blank=True, null=True)
+    docs = ManyToManyField(Document,through='CompDoc')
+        #models.FileField(verbose_name="Документ", upload_to='documents/', blank=True, null=True))
     # дата
     update = models.DateTimeField(verbose_name="Время загрузки", auto_now_add=True)
     # ометка о том, что является заказом/проектом
