@@ -18,13 +18,15 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
-app_name='elements'
+app_name = 'elements'
 
 urlpatterns = [
-    #path('up',views.up,name='up'),
-    path('up',views.PictureWorkView.as_view(),name='up'),
-    path('galery_pic',views.GaleryView.as_view(),name='galery_pic'),
-    path('up_docs',views.DocumentUpload.as_view(),name='up_docs'),
-    path('doclist',views.DocList.as_view(),name='doclist'),
+    # path('up',views.up,name='up'),
+    path('up', views.PictureWorkView.as_view(), name='up'),
+    path('galery_pic', views.GaleryView.as_view(), name='galery_pic'),
+    path('up_docs', views.DocumentUpload.as_view(), name='up_docs'),
+    path('doclist', views.DocList.as_view(), name='doclist'),
+    path('upItem', views.CompCreate.as_view(), name='upItem'),
+    path('showItem', views.CompShow.as_view(), name='showItem'),
 
 ]

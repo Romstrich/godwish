@@ -1,12 +1,16 @@
 # forms.py
+from email.policy import default
+
 from django import forms
 from django.forms import ClearableFileInput
 
-from .models import Picture, Document
+from .models import Picture, Document, Component
 
-#-----------Заготовка под мультизагрузку
+
+# -----------Заготовка под мультизагрузку
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
+
 
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
@@ -20,19 +24,29 @@ class MultipleFileField(forms.FileField):
         else:
             result = single_file_clean(data, initial)
         return result
-#END--------Заготовка под мультизагрузку
+
+
+# END--------Заготовка под мультизагрузку
 
 class UpPicture(forms.ModelForm):
-
     picture = MultipleFileField(label='Select files', required=False)
-    class Meta:
 
+    class Meta:
         model = Picture
-        fields=['name','comment','picture']
+        fields = ['name', 'comment', 'picture']
+
 
 class UpDocument(forms.ModelForm):
     document = MultipleFileField(label='Select files', required=False)
+
     class Meta:
         model = Document
-        fields = ['name', 'comment','document']
+        fields = ['name', 'comment', 'document']
 
+
+class UpComponent(forms.ModelForm):
+    docs=MultipleFileField(label='Select files', required=False)
+    images = MultipleFileField(label='Select files', required=False)
+    class Meta:
+        model = Component
+        fields = ['name','comment','images','docs','contract']
