@@ -24,5 +24,7 @@ urlpatterns = [
     #path('up',views.up,name='up'),
     path('up',views.PictureWorkView.as_view(),name='up'),
     path('galery_pic',views.GaleryView.as_view(),name='galery_pic'),
+    path('up_docs',views.DocumentUpload.as_view(),name='up_docs'),
+    path('doclist',views.DocList.as_view(),name='doclist'),
 
 ]

@@ -17,3 +17,10 @@ class Picture(models.Model):
     update=models.DateTimeField(verbose_name="Время загрузки",auto_now_add=True)
     #Включить автора загрузки
     #Включить "хозяина" Картинки
+
+class Document(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(verbose_name="Название документу", max_length=128, blank=True)
+    comment = models.CharField(verbose_name="Комментарий к документу", max_length=256, blank=True)
+    document=models.FileField(verbose_name="Документ",upload_to='documents/',blank=True, null=True)
+    update = models.DateTimeField(verbose_name="Время загрузки", auto_now_add=True)

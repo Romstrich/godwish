@@ -2,7 +2,7 @@
 from django import forms
 from django.forms import ClearableFileInput
 
-from .models import Picture
+from .models import Picture, Document
 
 #-----------Заготовка под мультизагрузку
 class MultipleFileInput(forms.ClearableFileInput):
@@ -30,12 +30,9 @@ class UpPicture(forms.ModelForm):
         model = Picture
         fields=['name','comment','picture']
 
+class UpDocument(forms.ModelForm):
+    document = MultipleFileField(label='Select files', required=False)
+    class Meta:
+        model = Document
+        fields = ['name', 'comment','document']
 
-
-
-# class ImageForm(forms.ModelForm):
-#     photo = MultipleFileField(label='Select files', required=False)
-#
-#     class Meta:
-#         model = Image
-#         fields = ['photo', ]

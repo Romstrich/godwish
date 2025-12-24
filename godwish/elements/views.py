@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.template.context_processors import request
 from django.views import View
 from django.http import HttpResponseRedirect
+from django.views.generic import ListView
 
-
-from .forms import UpPicture
-from .models import Picture
+from .forms import UpPicture, UpDocument
+from .models import Picture, Document
 # Create your views here.
 # Посмотреть работу с классом, одним классом загружать и васё остальное
 
@@ -21,17 +21,12 @@ class PictureWorkView(View):
         content={'form':form}
         return render(request,context=content,template_name='picture_upload.html')
     def post(self,request):
-        # form=UpPicture(request.POST,request.FILES)
-        # if form.is_valid():
-        #     #for img in request.FILES.getlist('images')
-        #     form.save()
-        #     img_obj=form.instance
         #Получим картинки
         uploaded_images = request.FILES.getlist('picture')
         #'_post': <QueryDict: {'csrfmiddlewaretoken': ['JQkGZHdbEzr0OSFybtm4k6fJ4bTp6Ycb4drfVc4Rip4Eamz63cDZZifiNdeW3prO'], 'name': ['sdfasdf'], 'comment': ['asdfasdf'], 'picture': ['']}>, '_files': <MultiValueDict: {}>
         #Получим комментарий и имя
         commentPic=request.POST['comment']
-        namePic=comment=request.POST['name']
+        namePic=request.POST['name']
         upImageLen=len(uploaded_images)
         for image in uploaded_images:
             print(image._name)
@@ -45,7 +40,47 @@ class PictureWorkView(View):
             else:
                 Picture.objects.create(name=image._name,comment=commentPic,picture=image)
 
-        return render(request,template_name='picture_upload.html')
+        return render(request,template_name='loaded.html')
+
+class DocumentUpload(View):
+    def get(self,request):
+        form = UpDocument
+        content = {'form': form}
+        return render(request, context=content, template_name='picture_upload.html')
+    def post(self,request):
+        print(request.POST.__dict__)
+        uploaded_docs = request.FILES.getlist('document')
+        commentDoc = request.POST['comment']
+        nameDoc = request.POST['name']
+        upDocsLen=len(uploaded_docs)
+        print(upDocsLen)
+        for doc in uploaded_docs:
+            print(doc._name)
+            if upDocsLen == 1:
+                if nameDoc:
+                    Document.objects.create(name=nameDoc, comment=commentDoc, document=doc)
+                else:
+                    Document.objects.create(name=doc._name, comment=commentDoc, document=doc)
+            else:
+                Document.objects.create(name=doc._name,comment=commentDoc,document=doc)
+
+        return render(request, template_name='loaded.html')
+
+class DocList(ListView):
+    model=Document
+    template_name = 'doclist.html'
+    context_object_name = 'docs'
+    queryset = Document.objects.all()
+    # paginate_by = 10
+
+    # def get_queryset(self):
+    #     docs=Document.objects.all()
+    #     return docs
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     return context
+
 
 class GaleryView(View):
     '''Класс просмотра галереи'''
