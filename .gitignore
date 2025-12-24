@@ -4,3 +4,4 @@ godwish/lib/key
 __pycache__/
 media
 /materials_sources
+godwish/db.sqlite3
