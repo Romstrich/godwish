@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.db.models import ManyToManyField
 
@@ -10,6 +12,8 @@ from django.db.models import ManyToManyField
     -Заказы
     -ПО'''
 
+def img_location(location='galery/'):
+    return location
 
 class Picture(models.Model):
     '''Модель картинки

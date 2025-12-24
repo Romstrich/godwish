@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 
 from .forms import UpPicture, UpDocument, UpComponent
-from .models import Picture, Document, Component
+from .models import Picture, Document, Component, img_location
 
 
 # Create your views here.
@@ -112,6 +112,7 @@ class CompCreate(View):
         print(comp)
 
         # Забираем картинки
+        IMG_LOCATION='new_galery/'
         uploaded_images = request.FILES.getlist('images')
         if len(uploaded_images):
             for image in uploaded_images:
