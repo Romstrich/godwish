@@ -108,7 +108,8 @@ class CompCreate(View):
         else:
             contract = False
         print(contract)
-        Component.objects.create(name=name, comment=comment, contract=contract)
+        comp=Component.objects.create(name=name, comment=comment, contract=contract)
+        print(comp)
 
         # Забираем картинки
         uploaded_images = request.FILES.getlist('images')
@@ -117,14 +118,16 @@ class CompCreate(View):
                 print(image._name)
                 # Сохраним картинку
                 # Если картинка одна и есть name из формы:
-                Picture.objects.create(name=image._name, comment=comment, picture=image)
+                pic=Picture.objects.create(name=image._name, comment=comment, picture=image)
+                comp.images.add(pic)
 
         # Забираем документы
         uploaded_docs = request.FILES.getlist('docs')
         if len(uploaded_docs):
             for doc in uploaded_docs:
                 print(doc._name)
-                Document.objects.create(name=doc._name, comment=comment, document=doc)
+                upDoc=Document.objects.create(name=doc._name, comment=comment, document=doc)
+                comp.docs.add(upDoc)
 
         return render(request, template_name='loaded.html')
 

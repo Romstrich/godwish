@@ -45,8 +45,8 @@ class UpDocument(forms.ModelForm):
 
 
 class UpComponent(forms.ModelForm):
-    docs=MultipleFileField(label='Select files', required=False)
-    images = MultipleFileField(label='Select files', required=False)
+    docs=MultipleFileField(label='Загрузить документы', required=False)
+    images = MultipleFileField(label='Загрузить изображения', required=False)
     class Meta:
         model = Component
         fields = ['name','comment','images','docs','contract']

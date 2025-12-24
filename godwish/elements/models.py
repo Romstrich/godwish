@@ -14,7 +14,7 @@ from django.db.models import ManyToManyField
 class Picture(models.Model):
     '''Модель картинки
     '''
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Название изображения", max_length=128, blank=True)
     comment = models.CharField(verbose_name="Комментарий к изображению", max_length=256, blank=True)
     picture = models.ImageField(verbose_name="Изображение", upload_to='galery/', blank=True, null=True)
@@ -26,7 +26,7 @@ class Picture(models.Model):
 class Document(models.Model):
     '''модель документа
     '''
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Название документу", max_length=128, blank=True)
     comment = models.CharField(verbose_name="Комментарий к документу", max_length=256, blank=True)
     document = models.FileField(verbose_name="Документ", upload_to='documents/', blank=True, null=True)
@@ -37,7 +37,7 @@ class Component(models.Model):
     '''Constituent (Составная часть)
     модель элемента комплектации
     '''
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Название", max_length=128, blank=True)
     comment = models.CharField(verbose_name="Комментарий", max_length=256, blank=True)
     # ссылка на изображения
