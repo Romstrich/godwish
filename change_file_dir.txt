@@ -1,0 +1,9 @@
+uploaded_docs = request.FILES.getlist('docs')
+        if len(uploaded_docs):
+            for doc in uploaded_docs:
+                print(doc._name)
+                fs = FileSystemStorage(location=f'media/{name}')
+                doc_fname = fs.save(doc.name, doc)
+                doc_url = os.path.join(f'/{name}/', doc_fname)
+                upDoc=Document.objects.create(name=doc._name, comment=comment, document=doc_url)
+                comp.docs.add(upDoc)

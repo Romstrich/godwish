@@ -25,6 +25,8 @@ class Picture(models.Model):
     update = models.DateTimeField(verbose_name="Время загрузки", auto_now_add=True)
     # Включить автора загрузки
     # Включить "хозяина" Картинки
+    # def create(self,*args,**kvargs):
+    #     super(ItemModel, self).save(*args, **kwargs)
 
 
 class Document(models.Model):

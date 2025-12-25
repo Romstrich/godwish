@@ -1,11 +1,16 @@
+import os.path
+
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
+from django.core.files.storage import FileSystemStorage
+from PIL import Image
 
 from .forms import UpPicture, UpDocument, UpComponent
 from .models import Picture, Document, Component, img_location
+# from godwish import settings
 
 
 # Create your views here.
@@ -112,22 +117,30 @@ class CompCreate(View):
         print(comp)
 
         # Забираем картинки
-        IMG_LOCATION='new_galery/'
+        # IMG_LOCATION='new_galery/'
         uploaded_images = request.FILES.getlist('images')
         if len(uploaded_images):
             for image in uploaded_images:
-                print(image._name)
+                print(image.name)
                 # Сохраним картинку
+                fs = FileSystemStorage(location=f'media/{name}')
+                img_fname = fs.save(image.name,image)
+                img_url= os.path.join(f'/{name}/',img_fname)
                 # Если картинка одна и есть name из формы:
-                pic=Picture.objects.create(name=image._name, comment=comment, picture=image)
+                pic=Picture.objects.create(name=image.name, comment=comment,picture=img_url)# picture=image)
                 comp.images.add(pic)
+                #переложим картинку
+
 
         # Забираем документы
         uploaded_docs = request.FILES.getlist('docs')
         if len(uploaded_docs):
             for doc in uploaded_docs:
                 print(doc._name)
-                upDoc=Document.objects.create(name=doc._name, comment=comment, document=doc)
+                fs = FileSystemStorage(location=f'media/{name}')
+                doc_fname = fs.save(doc.name, doc)
+                doc_url = os.path.join(f'/{name}/', doc_fname)
+                upDoc=Document.objects.create(name=doc._name, comment=comment, document=doc_url)
                 comp.docs.add(upDoc)
 
         return render(request, template_name='loaded.html')
