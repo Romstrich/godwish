@@ -16,7 +16,8 @@ def img_location(location='galery/'):
     return location
 
 class Picture(models.Model):
-    '''Модель картинки
+    '''
+    Модель картинки
     '''
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Название изображения", max_length=128, blank=True)
@@ -30,7 +31,8 @@ class Picture(models.Model):
 
 
 class Document(models.Model):
-    '''модель документа
+    '''
+    модель документа
     '''
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Название документу", max_length=128, blank=True)

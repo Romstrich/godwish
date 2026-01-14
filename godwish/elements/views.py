@@ -1,9 +1,12 @@
+'''
+
+'''
 import os.path
 
 from django.shortcuts import render
 from django.template.context_processors import request
 from django.views import View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import ListView
 from django.core.files.storage import FileSystemStorage
 from PIL import Image
@@ -16,14 +19,16 @@ from .models import Picture, Document, Component, img_location
 # Create your views here.
 # Посмотреть работу с классом, одним классом загружать и васё остальное
 
+def plug(request):
+    return HttpResponse('<h1>ЗАГЛУШКА</h1>')
 
 def complite(request):
+    '''Страничка успешной загрузки'''
     return render(request, template_name='loaded.html')
 
 
 class PictureWorkView(View):
     '''Класс загрузки изображений'''
-
     def get(self, request):
         form = UpPicture
         content = {'form': form}
@@ -53,6 +58,9 @@ class PictureWorkView(View):
 
 
 class DocumentUpload(View):
+    '''
+    класс загрузки документов
+    '''
     def get(self, request):
         form = UpDocument
         content = {'form': form}
@@ -79,6 +87,9 @@ class DocumentUpload(View):
 
 
 class DocList(ListView):
+    '''
+    Просмотр всех документов
+    '''
     model = Document
     template_name = 'doclist.html'
     context_object_name = 'docs'
@@ -86,8 +97,9 @@ class DocList(ListView):
 
 
 class GaleryView(View):
-    '''Класс просмотра галереи'''
-
+    '''
+    Класс просмотра всей галереи
+    '''
     def get(self, request):
         galeryList = Picture.objects.all()
         content = {'pictures': galeryList}
@@ -95,6 +107,9 @@ class GaleryView(View):
 
 
 class CompCreate(View):
+    '''
+    Создание элемента
+    '''
     form = UpComponent
 
     def get(self, request):
@@ -122,7 +137,7 @@ class CompCreate(View):
         if len(uploaded_images):
             for image in uploaded_images:
                 print(image.name)
-                # Сохраним картинку
+                # Сохраним картинку со сменой локации
                 fs = FileSystemStorage(location=f'media/{name}')
                 img_fname = fs.save(image.name,image)
                 img_url= os.path.join(f'/{name}/',img_fname)
@@ -130,13 +145,12 @@ class CompCreate(View):
                 pic=Picture.objects.create(name=image.name, comment=comment,picture=img_url)# picture=image)
                 comp.images.add(pic)
                 #переложим картинку
-
-
         # Забираем документы
         uploaded_docs = request.FILES.getlist('docs')
         if len(uploaded_docs):
             for doc in uploaded_docs:
                 print(doc._name)
+                #Сохраним документ со сменой локации
                 fs = FileSystemStorage(location=f'media/{name}')
                 doc_fname = fs.save(doc.name, doc)
                 doc_url = os.path.join(f'/{name}/', doc_fname)
@@ -147,8 +161,34 @@ class CompCreate(View):
 
 
 class CompShow(View):
+    '''
+    Показ элемента (списка)
+    '''
     def get(self,request):
         # Чтобы показать элемент, необходимо поднять несколько таблиц
         components=Component.objects.all()
         content={'components':components}
         return render(request,context=content, template_name='component/showComp.html')
+
+class OrdersShow(ListView):
+    '''
+    Список заказов
+    '''
+    model = Component
+    template_name = 'component/orderList.html'
+    context_object_name = 'components'
+    extra_context = {'title':'Список заказов'}
+
+    def get_queryset(self):
+        '''
+        Возмём только компоненты, имеющие флаг заказа
+        '''
+        return Component.objects.filter(contract=True)
+    # def get_context_data(self, *, object_list=None, **kwargs):
+
+    # def get(self,request):
+    #     components = Component.objects.all()
+    #     content = {'components': components}
+    #     return render(request, context=content, template_name='component/showComp.html')
+
+
