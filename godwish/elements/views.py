@@ -5,13 +5,14 @@ import os.path
 
 from django.shortcuts import render
 from django.template.context_processors import request
+from django.urls import reverse_lazy
 from django.views import View
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from django.core.files.storage import FileSystemStorage
 from PIL import Image
 
-from .forms import UpPicture, UpDocument, UpComponent
+from .forms import UpPicture, UpDocument, UpComponent, OrderAdd
 from .models import Picture, Document, Component, img_location
 # from godwish import settings
 
@@ -191,4 +192,22 @@ class OrdersShow(ListView):
     #     content = {'components': components}
     #     return render(request, context=content, template_name='component/showComp.html')
 
+class OrderAdd(CreateView):
+    '''
+    Создание заказа
+    '''
+    form_class = OrderAdd
+    template_name = 'component/orderAdd.html'
+    success_url = reverse_lazy('index')
 
+    # def get_form_kwargs(self):
+    #     """
+    #     Возвращает словарь аргументов для экземпляра формы
+    #     """
+    #     # kwargs = {'initial': self.get_initial()}
+        # if self.request.method in ('POST', 'PUT'):
+        #     kwargs.update({
+        #         'data': self.request.POST,
+        #         'files': self.request.FILES,
+        #     })
+        # return kwargs

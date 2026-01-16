@@ -63,8 +63,18 @@ class UpComponent(forms.ModelForm):
         model = Component
         fields = ['name','comment','images','docs','contract']
 
-class MakeOrder(forms.Form):
+class OrderAdd(forms.ModelForm):
     '''
     Форма создания непосредственно заказа
     ( ПУНКТ contract по-умолчанию True)
     '''
+    docs = MultipleFileField(label='Загрузить документы', required=False)
+    images = MultipleFileField(label='Загрузить изображения', required=False)
+    class Meta:
+        model = Component
+        fields = ['name','comment','images','docs','contract']
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['contract'].empty_label=None
+        self.fields['contract'].initial=True

@@ -23,7 +23,7 @@ app_name = 'elements'
 urlpatterns = [
     # path('up',views.up,name='up'),
     path('orders',views.OrdersShow.as_view(),name='orders'),
-    path('orders/add',views.plug,name='add_order'),
+    path('orders/add',views.OrderAdd.as_view(),name='add_order'),
     # ===========ПРОВЕРИТЬ АКТУАЛЬНОСТЬ=========
     path('up', views.PictureWorkView.as_view(), name='up'),
     path('galery_pic', views.GaleryView.as_view(), name='galery_pic'),
