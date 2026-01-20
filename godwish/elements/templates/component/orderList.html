@@ -12,33 +12,41 @@
 <body>
 <h1>{{ title }}</h1>
 <ul>
+    {% if components %}
     {% for comp in components %}
     <li>
-        <h3>{{ comp.name }}</h3> {{ comp.comment }} {{ comp.update }} {{ comp.contract }}
+        <h3>
+            <a href="{% url 'elements:detail_comp' comp.id %}">{{ comp.name }}
+
+            </a>
+        </h3> {{ comp.comment }} {{ comp.update }} {{ comp.contract }}
         {% if comp.docs.all %}
-        <br> Документы:
-        {% endif %}
-        <ul>
-            {% for doc in comp.docs.all %}
-            <li>
-                {{ doc.name }}
-            </li>
-            {% endfor %}
+<!--        <br> Документы:-->
+<!--        {% endif %}-->
+<!--        <ul>-->
+<!--            {% for doc in comp.docs.all %}-->
+<!--            <li>-->
+<!--                {{ doc.name }}-->
+<!--            </li>-->
+<!--            {% endfor %}-->
 
-        </ul>
-        {% if comp.images.all %}
-        Изображения: <br>
-        {% endif %}
-        {% for pic in comp.images.all %}
-        <div class="pic">
+<!--        </ul>-->
+<!--        {% if comp.images.all %}-->
+<!--        Изображения: <br>-->
+<!--        {% endif %}-->
+<!--        {% for pic in comp.images.all %}-->
+<!--        <div class="pic">-->
 
-            <img width="189" height="255" src="{{ pic.picture.url }}">
+<!--            <img width="189" height="255" src="{{ pic.picture.url }}">-->
 
 
-        </div>
-        {% endfor %}
+<!--        </div>-->
+<!--        {% endfor %}-->
     </li>
     {% endfor %}
+    {% else %}
+    <h2>Заказов не найдено</h2>
+    {% endif %}
 </ul>
 <!--Создать заказ-->
 <div><a href="{% url 'elements:add_order' %}">Создать заказ</a></div>

@@ -76,5 +76,5 @@ class OrderAdd(forms.ModelForm):
 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.fields['contract'].empty_label=None
+        self.fields['contract'].widget=forms.HiddenInput()
         self.fields['contract'].initial=True

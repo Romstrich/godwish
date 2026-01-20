@@ -2,13 +2,14 @@
 
 '''
 import os.path
+from audioop import reverse
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.context_processors import request
 from django.urls import reverse_lazy
 from django.views import View
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.core.files.storage import FileSystemStorage
 from PIL import Image
 
@@ -198,16 +199,26 @@ class OrderAdd(CreateView):
     '''
     form_class = OrderAdd
     template_name = 'component/orderAdd.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('elements:orders')#,request=request)
+    # def get_success_url(self,*args,**kwargs):
+    #     return redirect('orders')#,kwargs={})  # ,request=request)
 
-    # def get_form_kwargs(self):
-    #     """
-    #     Возвращает словарь аргументов для экземпляра формы
-    #     """
-    #     # kwargs = {'initial': self.get_initial()}
-        # if self.request.method in ('POST', 'PUT'):
-        #     kwargs.update({
-        #         'data': self.request.POST,
-        #         'files': self.request.FILES,
-        #     })
-        # return kwargs
+class DetailComp(DetailView):
+    '''
+    Компонент в деталях
+        родители
+        дочки
+        документы
+        картинки
+        описание
+    '''
+    model = Component
+    # queryset = Component.objects.filter(id=id)
+    template_name = 'component/showComp.html'
+    # slug_url_kwarg = 'comp'
+    context_object_name='comp'
+
+    def get_object(self, queryset=None):
+        id = self.kwargs.get('id')
+        comp=Component.objects.get(id=id)
+        return comp
