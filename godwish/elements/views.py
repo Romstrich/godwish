@@ -202,6 +202,56 @@ class OrderAdd(CreateView):
     success_url = reverse_lazy('elements:orders')#,request=request)
     # def get_success_url(self,*args,**kwargs):
     #     return redirect('orders')#,kwargs={})  # ,request=request)
+    def post(self,request):
+        '''
+        Сохранение заказа.
+        Скопировано с компонента, неплохо былобы подкорректировать
+        '''
+        name = request.POST.get('name')
+        comment = request.POST.get('comment')
+        contract = request.POST.get('contract')
+        print(name)
+        print(comment)
+        if contract == 'on':
+            contract = True
+        else:
+            contract = False
+        print(contract)
+        comp = Component.objects.create(name=name, comment=comment, contract=True)
+        print(f'{comp}\nOrder ID: {comp.id}')
+
+        # Забираем картинки
+        # IMG_LOCATION='new_galery/'
+        uploaded_images = request.FILES.getlist('images')
+        if len(uploaded_images):
+            for image in uploaded_images:
+                print(image.name)
+                # Сохраним картинку со сменой локации
+                fs = FileSystemStorage(location=f'media/{name}')
+                img_fname = fs.save(image.name, image)
+                img_url = os.path.join(f'/{name}/', img_fname)
+                # Если картинка одна и есть name из формы:
+                pic = Picture.objects.create(name=image.name, comment=comment, picture=img_url)  # picture=image)
+                comp.images.add(pic)
+                print(f'{pic}\nImage ID:{pic.id}')
+                # Подключаем картинку через связную таблицу MtM
+
+        # Забираем документы
+        uploaded_docs = request.FILES.getlist('docs')
+        if len(uploaded_docs):
+            for doc in uploaded_docs:
+                print(doc._name)
+                # Сохраним документ со сменой локации
+                fs = FileSystemStorage(location=f'media/{name}')
+                doc_fname = fs.save(doc.name, doc)
+                doc_url = os.path.join(f'/{name}/', doc_fname)
+                upDoc = Document.objects.create(name=doc._name, comment=comment, document=doc_url)
+                comp.docs.add(upDoc)
+                print(f'{upDoc}\nImage ID:{upDoc.id}')
+        print(f'Переход по ID: {comp.id}')
+        return redirect('elements:detail_comp',id=comp.id)
+        # return HttpResponseRedirect(reverse('detail_comp', kwargs={'id': comp.id}))
+        # return render(request, template_name='loaded.html')
 
 class DetailComp(DetailView):
     '''
@@ -217,8 +267,16 @@ class DetailComp(DetailView):
     template_name = 'component/showComp.html'
     # slug_url_kwarg = 'comp'
     context_object_name='comp'
+    # extra_context =
 
     def get_object(self, queryset=None):
         id = self.kwargs.get('id')
         comp=Component.objects.get(id=id)
         return comp
+
+    # def get_context_data(self, **kwargs):
+    #     '''
+    #     Костыль для вывода документов и картинок
+    #     '''
+    #     # id = self.kwargs.get('id')
+    #     context=super().get_context_data()

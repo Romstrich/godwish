@@ -75,6 +75,8 @@ class OrderAdd(forms.ModelForm):
         fields = ['name','comment','images','docs','contract']
 
     def __init__(self,*args,**kwargs):
+
         super().__init__(*args,**kwargs)
         self.fields['contract'].widget=forms.HiddenInput()
         self.fields['contract'].initial=True
+
